@@ -35,7 +35,6 @@
 		style="font-family: 'Source Sans 3', sans-serif;"
 	>
 		<div class="flex flex-col gap-6 lg:max-w-xl">
-
 			<div class="space-y-4">
 				<h1
 					class="text-4xl leading-tight text-slate-900 sm:text-6xl"
