@@ -35,17 +35,6 @@
 		style="font-family: 'Source Sans 3', sans-serif;"
 	>
 		<div class="flex flex-col gap-6 lg:max-w-xl">
-			<div class="flex items-center gap-3">
-				<div
-					class="flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-100 bg-white/80 text-base font-semibold text-emerald-700 shadow-sm"
-					aria-hidden="true"
-				>
-					FD
-				</div>
-				<p class="text-sm font-semibold tracking-[0.2em] text-emerald-700 uppercase">
-					Local transfer
-				</p>
-			</div>
 
 			<div class="space-y-4">
 				<h1
