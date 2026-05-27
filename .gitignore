@@ -1,18 +1,22 @@
-node_modules
+# Dependencies
+node_modules/
 
 # Output
-.output
-.vercel
-.netlify
-.wrangler
+.output/
+.vercel/
+.netlify/
+.wrangler/
 /.svelte-kit
 /build
+
+# Local app data
+.local-data/
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Env
+# Environment
 .env
 .env.*
 !.env.example
@@ -21,7 +25,3 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
-
-.local-data/
-.env.local

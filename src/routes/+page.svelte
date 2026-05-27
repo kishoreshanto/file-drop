@@ -1,3 +1,9 @@
+<script lang="ts">
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
+</script>
+
 <svelte:head>
 	<title>File Drop</title>
 	<meta
@@ -5,7 +11,7 @@
 		content="Local Android-to-Mac file transfer running on your private network."
 	/>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
 		href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Source+Sans+3:wght@400;500;600&display=swap"
 		rel="stylesheet"
@@ -16,7 +22,7 @@
 	class="relative min-h-svh overflow-hidden bg-gradient-to-br from-amber-50 via-white to-emerald-50 text-slate-900"
 >
 	<div
-		class="pointer-events-none absolute -left-24 top-0 h-64 w-64 rounded-full bg-emerald-100/70 blur-3xl"
+		class="pointer-events-none absolute top-0 -left-24 h-64 w-64 rounded-full bg-emerald-100/70 blur-3xl"
 		aria-hidden="true"
 	></div>
 	<div
@@ -36,7 +42,7 @@
 				>
 					FD
 				</div>
-				<p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">
+				<p class="text-sm font-semibold tracking-[0.2em] text-emerald-700 uppercase">
 					Local transfer
 				</p>
 			</div>
@@ -54,8 +60,8 @@
 			</div>
 
 			<p class="text-base leading-7 text-slate-500">
-				Server is running. Keep this Mac online, then open the local address from your
-				Android phone when pairing and uploads are enabled.
+				Server is running. Keep this Mac online, then open the local address from your Android phone
+				when pairing and uploads are enabled.
 			</p>
 
 			<div class="flex flex-wrap gap-3">
@@ -80,8 +86,24 @@
 					<p class="text-sm font-semibold text-slate-500">Connection</p>
 					<p class="text-sm font-semibold text-emerald-700">Online</p>
 				</div>
-				<div class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+				<div
+					class="h-px w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent"
+				></div>
 				<div class="space-y-4">
+					<div class="flex items-start justify-between gap-6">
+						<div>
+							<p class="text-sm text-slate-500">Database</p>
+							<p class="mt-2 text-base font-semibold text-slate-900">
+								Database: {data.health.database}
+							</p>
+						</div>
+						<div class="text-right">
+							<p class="text-sm text-slate-500">Storage</p>
+							<p class="mt-2 text-base font-semibold text-slate-900">
+								Upload directory: {data.health.uploadDirectory}
+							</p>
+						</div>
+					</div>
 					<div class="flex items-start justify-between gap-6">
 						<div>
 							<p class="text-sm text-slate-500">Runtime</p>
