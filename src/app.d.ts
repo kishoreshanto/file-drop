@@ -8,6 +8,7 @@ declare global {
 				id: string;
 				name: string;
 			} | null;
+			sessionStatus: 'missing' | 'active' | 'expired' | 'revoked' | 'invalid';
 		}
 		// interface PageData {}
 		// interface PageState {}

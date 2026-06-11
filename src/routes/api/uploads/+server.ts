@@ -3,6 +3,7 @@ import { rm } from 'node:fs/promises';
 
 import { json, type RequestHandler } from '@sveltejs/kit';
 
+import { getAuthErrorMessage } from '$lib/server/auth/guards';
 import { env } from '$lib/server/config/env';
 import { tempUploadDir, uploadRoot } from '$lib/server/config/paths';
 import { sqlite } from '$lib/server/db/client';
@@ -47,7 +48,10 @@ function validationMessage(error: unknown) {
 
 export const POST: RequestHandler = async ({ locals, request }) => {
 	if (!locals.device) {
-		return json({ accepted: [], rejected: [], message: 'Pairing required.' }, { status: 401 });
+		return json(
+			{ accepted: [], rejected: [], message: getAuthErrorMessage(locals.sessionStatus) },
+			{ status: 401 }
+		);
 	}
 
 	const formData = await request.formData();

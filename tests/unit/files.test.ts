@@ -82,6 +82,17 @@ test('blocked executable-style extensions are rejected', () => {
 	}
 });
 
+test('oversized files are rejected', () => {
+	assert.throws(
+		() =>
+			validateFileForStorage(
+				{ name: 'large-photo.jpg', size: 51, type: 'image/jpeg' },
+				{ maxFileSizeBytes: 50 }
+			),
+		(error) => error instanceof FileValidationError && error.code === 'invalid_file_size'
+	);
+});
+
 test('completed files are moved into date-based upload directories', async () => {
 	const fixture = await createStorageFixture();
 

@@ -240,6 +240,12 @@
 				>
 					Secure transfer
 				</span>
+				<a
+					class="rounded-full border border-slate-200 bg-white/70 px-4 py-1 text-sm font-semibold text-slate-600"
+					href="/history"
+				>
+					History
+				</a>
 				<span
 					class="rounded-full border border-slate-200 bg-white/70 px-4 py-1 text-sm font-semibold text-slate-600"
 				>

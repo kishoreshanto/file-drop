@@ -8,6 +8,16 @@ export type AuthenticatedDevice = {
 	name: string;
 };
 
+export type SessionLookup =
+	| {
+			status: 'active';
+			device: AuthenticatedDevice;
+	  }
+	| {
+			status: 'missing' | 'expired' | 'revoked' | 'invalid';
+			device: null;
+	  };
+
 export type CreatedSession = {
 	token: string;
 	expiresAt: Date;
@@ -62,35 +72,76 @@ export function createDeviceSession(deviceName: string): CreatedSession {
 	};
 }
 
-export function getDeviceForSessionToken(token: string | undefined): AuthenticatedDevice | null {
+export function getSessionForToken(token: string | undefined): SessionLookup {
 	if (!token) {
-		return null;
+		return { status: 'missing', device: null };
 	}
 
 	const now = Date.now();
 	const row = sqlite
 		.prepare(
 			`
-			select devices.id, devices.name
+			select
+				devices.id,
+				devices.name,
+				devices.revoked_at as deviceRevokedAt,
+				sessions.revoked_at as sessionRevokedAt,
+				sessions.expires_at as expiresAt
 			from sessions
 			inner join devices on devices.id = sessions.device_id
 			where sessions.token_hash = ?
-				and sessions.revoked_at is null
-				and sessions.expires_at > ?
-				and devices.revoked_at is null
 			limit 1
 		`
 		)
-		.get(hashSecret(token), now) as AuthenticatedDevice | undefined;
+		.get(hashSecret(token)) as
+		| {
+				id: string;
+				name: string;
+				deviceRevokedAt: number | null;
+				sessionRevokedAt: number | null;
+				expiresAt: number;
+		  }
+		| undefined;
 
 	if (!row) {
-		return null;
+		return { status: 'invalid', device: null };
+	}
+
+	if (row.deviceRevokedAt || row.sessionRevokedAt) {
+		return { status: 'revoked', device: null };
+	}
+
+	if (row.expiresAt <= now) {
+		return { status: 'expired', device: null };
 	}
 
 	sqlite.prepare('update devices set last_seen_at = ? where id = ?').run(now, row.id);
 
 	return {
-		id: row.id,
-		name: row.name
+		status: 'active',
+		device: {
+			id: row.id,
+			name: row.name
+		}
 	};
+}
+
+export function getDeviceForSessionToken(token: string | undefined): AuthenticatedDevice | null {
+	const session = getSessionForToken(token);
+	return session.status === 'active' ? session.device : null;
+}
+
+export function revokeDevice(deviceId: string) {
+	const now = Date.now();
+
+	const revoke = sqlite.transaction(() => {
+		sqlite
+			.prepare('update devices set revoked_at = ? where id = ? and revoked_at is null')
+			.run(now, deviceId);
+		sqlite
+			.prepare('update sessions set revoked_at = ? where device_id = ? and revoked_at is null')
+			.run(now, deviceId);
+	});
+
+	revoke();
 }
