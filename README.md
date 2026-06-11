@@ -23,6 +23,10 @@ For deeper design notes, see `PLAN.md`.
 - Storage layout by category and date (images, videos, documents, other).
 - SQLite persistence for devices, sessions, pairing codes, and uploads.
 
+## System Architecture
+
+![System Architecture](./system_architecture.png)
+
 ## Routes
 
 - `/` - server health and storage status (Mac view)
